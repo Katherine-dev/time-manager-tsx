@@ -42,7 +42,7 @@ export default class MainView extends VueComponent<Props> {
     },
   ];
 
-  private drawer: Boolean = false;
+  private drawer: boolean = false;
 
   private toggleDrawer(): void {
     this.drawer = !this.drawer;

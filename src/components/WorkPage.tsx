@@ -24,7 +24,7 @@ export default class WorkPage extends VueComponent {
     { title: 'Воскресенье', description: '' },
   ];
 
-  private dialog: Boolean = false;
+  private dialog: boolean = false;
 
   private editedItem: Weekday = {
     title: '',
