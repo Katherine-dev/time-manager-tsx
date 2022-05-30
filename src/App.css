@@ -9,3 +9,7 @@
   html {
     overflow: hidden;
   }
+  a {
+    color: black !important;
+    text-decoration: none; /* no underline */
+  }

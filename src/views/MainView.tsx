@@ -5,7 +5,8 @@ import { VueComponent } from '../shims-vue';
 import styles from './MainView.css?module';
 
 interface NavigationLink {
-  title: string
+  title: string,
+  route: string
 }
 
 interface Props {
@@ -20,21 +21,26 @@ export default class MainView extends VueComponent<Props> {
 
   private items: Array<NavigationLink> = [
     {
-      title: 'Study'
+      title: 'Study',
+      route: '/study'
     },
     {
-      title: 'Work'
+      title: 'Work',
+      route: '/work'
     },
     {
-      title: 'Hobby'
+      title: 'Hobby',
+      route: '/hobby'
     },
     {
-      title: 'Places'
+      title: 'Places',
+      route: '/places'
     },
     {
-      title: 'Recipes'
+      title: 'Recipes',
+      route: '/recipes'
     },
-];
+  ];
 
   private drawer: Boolean = false;
 
@@ -74,7 +80,9 @@ export default class MainView extends VueComponent<Props> {
                     link
                   >
                     <VListItemContent>
-                      <VListItemTitle>{item.title}</VListItemTitle>
+                      <VListItemTitle>
+                        <router-link to={item.route} class='subtitle-1'> {item.title}</router-link>
+                      </VListItemTitle>
                     </VListItemContent>
                   </VListItem>
                 )
