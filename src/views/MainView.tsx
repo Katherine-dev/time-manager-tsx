@@ -50,7 +50,7 @@ export default class MainView extends VueComponent<Props> {
 
   render() {
     return (
-      <VApp>
+      <VApp class={styles.fullHeight}>
         <VNavigationDrawer
           app
           v-model={this.drawer}
@@ -96,9 +96,10 @@ export default class MainView extends VueComponent<Props> {
         </VAppBar>
 
         <VMain
+          class={styles['main-content']}
           id="main-content"
         >
-          <VContainer fluid>
+          <VContainer fluid class={styles['main-container']}>
             <router-view></router-view>
           </VContainer>
         </VMain>

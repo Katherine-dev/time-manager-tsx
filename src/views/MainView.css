@@ -1,0 +1,15 @@
+.main-content {
+  height: 100%;
+  max-height: calc(100vh - 56px);
+  padding: 0 !important;
+  flex-basis: max-content;
+}
+
+.main-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+.fullHeight {
+  height: 100%;
+}
