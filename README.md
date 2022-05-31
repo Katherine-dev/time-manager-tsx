@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # tsx-project
 
 ## Project setup
@@ -17,3 +18,6 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+# time-manager-tsx
+>>>>>>> e563a03ad1f9aa766027a8b357392bd77deb175f
