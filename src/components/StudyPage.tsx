@@ -1,20 +1,22 @@
 import { VNode } from 'vue';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { VBtn, VCalendar, VCard, VCardActions, VCardText, VCardTitle, VCheckbox, VCol, VContainer, VDialog, VRow, VSheet, VSpacer, VMenu, VTextField, VTimePicker, VFabTransition, VIcon } from 'vuetify/lib';
+import { VBtn, VCalendar, VCard, VCardActions, VCardText, VCardTitle, VCheckbox, VCol, VContainer, VDialog, VRow, VSheet, VSpacer, VMenu, VTextField, VTimePicker, VFabTransition, VIcon, VToolbar, VToolbarTitle } from 'vuetify/lib';
 import { VueComponent } from '../shims-vue';
 
 
 import styles from './StudyPage.css?module';
 
-interface Weekday {
-  text: string,
-  value: Array<number>
+interface CalendarEvent {
+  color: string,
+  name: string,
+  details: string,
 }
 
 interface MyEvent {
+  id: number,
   name: string,
-  start: Date | null,
-  end: Date | null,
+  start: Date | number | null,
+  end: Date |number | null,
   color: string,
   timed: boolean,
 }
@@ -30,18 +32,27 @@ export default class StudyPage extends VueComponent {
   private dateStart: string = '';
   private timeStart: Date | null = null;
   private timeEnd: Date | null = null;
+  private selectedEvent: CalendarEvent = {
+    color: '',
+    name: '',
+    details: ''
+  };
+  private selectedElement: EventTarget | null = null;
+  private selectedOpen: boolean = false;
 
   private events: Array<MyEvent> = [
     {
+      id: 1,
       name: 'cxcx',
-      start: new Date('2022-05-30T13:24'),
-      end: new Date('2022-05-30T14:24'),
+      start: new Date('2022-05-30T13:24').getTime(),
+      end: new Date('2022-05-30T14:24').getTime(),
       color: this.colors[0],
       timed: true,
     }
   ];
 
   private newEvent: MyEvent = {
+    id: 0,
     name: '',
     start: null,
     end: null,
@@ -50,6 +61,7 @@ export default class StudyPage extends VueComponent {
   };
 
   private defaultEvent: MyEvent = {
+    id: 0,
     name: '',
     start: new Date(),
     end: new Date(),
@@ -65,17 +77,19 @@ export default class StudyPage extends VueComponent {
       console.log(this.events[0].start?.toString())
       this.events.forEach(el => {
         if (el.start) {
-          el.start = new Date(el.start?.toString().slice(0,16));
+          el.start = new Date(el.start);
         }
         if (el.end) {
-          el.end = new Date(el.end?.toString().slice(0,16));
+          el.end = new Date(el.end);
         }
       })
     } else {
       const parsed = JSON.stringify(this.events);
-      
+
       localStorage.setItem('events', parsed);
     }
+    console.log(this.$refs.calendar);
+
   };
 
   //methods
@@ -85,13 +99,15 @@ export default class StudyPage extends VueComponent {
     let partsDate = this.dateStart.split('.');
     let partsTime = this.timeStart?.toString().split(':');
     if (partsTime?.length) {
-      this.newEvent.start = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1, Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1]));
+      this.newEvent.start = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1, Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1])).getTime();
     }
     partsTime = this.timeEnd?.toString().split(':');
 
     if (partsTime?.length) {
-      this.newEvent.end = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1, Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1]));
+      this.newEvent.end = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1, Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1])).getTime();
     }
+
+    this.newEvent.id = this.events.length + 1;
   }
 
   private setTimeNode(value: string): VNode | undefined {
@@ -163,7 +179,7 @@ export default class StudyPage extends VueComponent {
   };
 
   private timePickerNode(value: string): VNode | undefined {
-    if (value === 'start') { 
+    if (value === 'start') {
       return (
         <VTimePicker
           v-model={this.timeStart}
@@ -172,7 +188,7 @@ export default class StudyPage extends VueComponent {
           format="24hr"
         ></VTimePicker>
       )
-    } else if (value === 'end') { 
+    } else if (value === 'end') {
       return (
         <VTimePicker
           v-model={this.timeEnd}
@@ -208,6 +224,9 @@ export default class StudyPage extends VueComponent {
   }
 
   render() {
+    let listeners = {
+      'click:event': this.showEvent
+    }
     return (
       <div class={styles.fullHeight}>
         <VFabTransition>
@@ -234,11 +253,49 @@ export default class StudyPage extends VueComponent {
             event-overlap-mode="stack"
             event-overlap-threshold="30"
             event-color={this.getEventColor}
-            onClick={(e) => this.whenClickOnEvent(e)}
+            {...{ on: listeners }}
           // onChange={() => {this.getEvents({'30.05.2022', '5.06.2022'})}}
           ></VCalendar>
-        </VSheet>
 
+          <VMenu
+            v-model={this.selectedOpen}
+            close-on-content-click={false}
+            activator={this.selectedElement}
+            offset-x
+          >
+            <VCard
+              color="grey lighten-4"
+              min-width="350px"
+              flat
+            >
+              <VToolbar
+                color={this.selectedEvent.color}
+                dark
+              >
+                <VBtn 
+                  icon
+                  onClick={this.editEvent}
+                >
+                  <VIcon>mdi-pencil</VIcon>
+                </VBtn>
+                <VToolbarTitle domPropsInnerHTML={this.selectedEvent.name}></VToolbarTitle>
+                <VSpacer></VSpacer>
+              </VToolbar>
+              <VCardText>
+                <span domPropsInnerHTML={this.selectedEvent.details}></span>
+              </VCardText>
+              <VCardActions>
+                <VBtn
+                  text
+                  color="secondary"
+                  onClick={() => { this.selectedOpen = false }}
+                >
+                  Cancel
+                </VBtn>
+              </VCardActions>
+            </VCard>
+          </VMenu>
+        </VSheet>
         <VDialog
           v-model={this.dialog}
           max-width="700px"
@@ -313,7 +370,28 @@ export default class StudyPage extends VueComponent {
     )
   };
 
-  private whenClickOnEvent(e: Event): void {
-    console.log(e)
+  private showEvent({ nativeEvent, event }: { nativeEvent: Event, event: CalendarEvent }): void {
+    const self = this;
+
+    const open = () => {
+      self.selectedEvent = event
+      this.selectedElement = nativeEvent.target
+      requestAnimationFrame(() => requestAnimationFrame(() => self.selectedOpen = true))
+    }
+
+    if (this.selectedOpen) {
+      this.selectedOpen = false
+      requestAnimationFrame(() => requestAnimationFrame(() => open()))
+    } else {
+      open()
+    }
+    console.log(nativeEvent, event);
+
+    nativeEvent.stopPropagation()
+  };
+  
+  private editEvent(): void {
+    console.log();
+    
   }
 }
