@@ -16,7 +16,7 @@ interface MyEvent {
   id: number,
   name: string,
   start: Date | number | null,
-  end: Date |number | null,
+  end: Date | number | null,
   color: string,
   timed: boolean,
 }
@@ -32,13 +32,9 @@ export default class StudyPage extends VueComponent {
   private dateStart: string = '';
   private timeStart: Date | null = null;
   private timeEnd: Date | null = null;
-  private selectedEvent: CalendarEvent = {
-    color: '',
-    name: '',
-    details: ''
-  };
   private selectedElement: EventTarget | null = null;
   private selectedOpen: boolean = false;
+  private mode: string = '';
 
   private events: Array<MyEvent> = [
     {
@@ -69,12 +65,19 @@ export default class StudyPage extends VueComponent {
     timed: false,
   };
 
+  private selectedEvent: MyEvent = {
+    id: 0,
+    name: '',
+    start: null,
+    end: null,
+    color: this.colors[Math.floor(Math.random() * (this.colors.length + 1))],
+    timed: false,
+  };
+
   mounted(): void {
     const localNotes = localStorage.getItem('events');
-    // console.log(localNotes)
     if (localNotes) {
       this.events = JSON.parse(localNotes);
-      console.log(this.events[0].start?.toString())
       this.events.forEach(el => {
         if (el.start) {
           el.start = new Date(el.start);
@@ -88,8 +91,6 @@ export default class StudyPage extends VueComponent {
 
       localStorage.setItem('events', parsed);
     }
-    console.log(this.$refs.calendar);
-
   };
 
   //methods
@@ -107,7 +108,9 @@ export default class StudyPage extends VueComponent {
       this.newEvent.end = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1, Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1])).getTime();
     }
 
-    this.newEvent.id = this.events.length + 1;
+    if (this.mode !== 'edit') {
+      this.newEvent.id = this.events.length + 1;
+    }
   }
 
   private setTimeNode(value: string): VNode | undefined {
@@ -207,20 +210,41 @@ export default class StudyPage extends VueComponent {
 
   private close(): void {
     this.dialog = false;
+    this.mode = '';
+
     this.$nextTick(() => {
       this.newEvent = Object.assign({}, this.defaultEvent);
+      this.dateStart = '';
+      this.timeStart = null;
+      this.timeEnd = null;
     })
   };
 
   private save(): void {
-    this.events.push(this.newEvent);
-    localStorage.setItem('events', JSON.stringify(this.events));
 
+    if (this.mode === 'edit') {
+      this.events.forEach((el, index) => {
+        console.log(el.id, this.newEvent.id);
+
+        if (el.id === this.newEvent.id) {
+          el.name = this.newEvent.name;
+          el.start = this.newEvent.start;
+          el.end = this.newEvent.end;
+          el.timed = this.newEvent.timed;
+        }
+      })
+    } else if (this.mode === 'create') {
+      this.events.push(this.newEvent);
+    }
+    localStorage.setItem('events', JSON.stringify(this.events));
+    
+    this.mode = '';
     this.close();
   };
 
   private addEvent(): void {
     this.dialog = true;
+    this.mode = 'create';
   }
 
   render() {
@@ -272,7 +296,7 @@ export default class StudyPage extends VueComponent {
                 color={this.selectedEvent.color}
                 dark
               >
-                <VBtn 
+                <VBtn
                   icon
                   onClick={this.editEvent}
                 >
@@ -284,13 +308,21 @@ export default class StudyPage extends VueComponent {
               <VCardText>
                 <span domPropsInnerHTML={this.selectedEvent.details}></span>
               </VCardText>
-              <VCardActions>
+              <VCardActions class={styles['card-actions']}>
                 <VBtn
                   text
                   color="secondary"
                   onClick={() => { this.selectedOpen = false }}
                 >
                   Cancel
+                </VBtn>
+                <VBtn
+                  text
+                  color="red"
+                  class={styles['delete-button']}
+                  onClick={this.deleteEvent}
+                >
+                  Delete
                 </VBtn>
               </VCardActions>
             </VCard>
@@ -370,7 +402,7 @@ export default class StudyPage extends VueComponent {
     )
   };
 
-  private showEvent({ nativeEvent, event }: { nativeEvent: Event, event: CalendarEvent }): void {
+  private showEvent({ nativeEvent, event }: { nativeEvent: Event, event: MyEvent }): void {
     const self = this;
 
     const open = () => {
@@ -385,13 +417,35 @@ export default class StudyPage extends VueComponent {
     } else {
       open()
     }
-    console.log(nativeEvent, event);
 
     nativeEvent.stopPropagation()
   };
-  
+
   private editEvent(): void {
-    console.log();
+    this.newEvent = { ...this.selectedEvent };
+    this.dialog = true;
+
+    if (this.newEvent.start && this.newEvent.end) {
+      this.dateStart = new Date(this.newEvent.start).toISOString().slice(0, 10);
+
+      let partsDate = this.dateStart.split('-');
+      this.dateStart = partsDate.reverse().join('.');
+
+      this.timeStart = new Date(this.newEvent.start);
+      this.timeEnd = new Date(this.newEvent.end);
+
+    }
+    this.mode = 'edit';
+  }
+
+  private deleteEvent(): void {
+    this.mode = 'delete';
+    const self = this;
+    this.events = this.events.filter(el => 
+      el.id !== self.selectedEvent.id
+    )
     
+    this.selectedOpen = false;
+    this.save();
   }
 }

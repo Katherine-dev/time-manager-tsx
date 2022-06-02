@@ -8,3 +8,7 @@
 .fullHeight {
   height: 100%;
 }
+
+.card-actions {
+  justify-content: space-between;
+}
