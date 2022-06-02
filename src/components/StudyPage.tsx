@@ -307,8 +307,7 @@ export default class StudyPage extends VueComponent {
                 <VSpacer></VSpacer>
               </VToolbar>
               <VCardText>
-                //TODO: Add details to dialog form
-                <span domPropsInnerHTML={this.selectedEvent.details}></span>
+                {/* <span domPropsInnerHTML={this.selectedEvent.details}></span> */}
               </VCardText>
               <VCardActions class={styles['card-actions']}>
                 <VBtn
@@ -333,6 +332,7 @@ export default class StudyPage extends VueComponent {
         <VDialog
           v-model={this.dialog}
           max-width="700px"
+          //TODO: Add details to dialog form
         >
           <VCard>
             <VCardTitle>

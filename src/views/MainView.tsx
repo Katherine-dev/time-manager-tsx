@@ -80,8 +80,8 @@ export default class MainView extends VueComponent<Props> {
                     link
                   >
                     <VListItemContent>
-                      <VListItemTitle>
-                        <router-link to={item.route} class='subtitle-1'> {item.title}</router-link>
+                      <VListItemTitle onClick={() => this.changeRoute(item.route)}>
+                        {item.title}
                       </VListItemTitle>
                     </VListItemContent>
                   </VListItem>
@@ -106,5 +106,11 @@ export default class MainView extends VueComponent<Props> {
 
       </VApp>
     )
+  };
+
+  private changeRoute(route: string): void {
+    if (this.$route.path !== route) {
+      this.$router.push(route)
+    }
   }
 }
