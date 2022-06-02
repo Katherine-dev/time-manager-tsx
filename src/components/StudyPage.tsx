@@ -131,6 +131,7 @@ export default class StudyPage extends VueComponent {
             max-width="290px"
             min-width="290px"
             scopedSlots={{
+              //TODO: Change types
               activator: ({ on, attrs }: { on: any, attrs: any }) =>
                 <VTextField
                   v-model={this.timeStart}
@@ -306,6 +307,7 @@ export default class StudyPage extends VueComponent {
                 <VSpacer></VSpacer>
               </VToolbar>
               <VCardText>
+                //TODO: Add details to dialog form
                 <span domPropsInnerHTML={this.selectedEvent.details}></span>
               </VCardText>
               <VCardActions class={styles['card-actions']}>
@@ -368,6 +370,7 @@ export default class StudyPage extends VueComponent {
                   >
                     <VTextField
                       v-model={this.dateStart}
+                      v-mask="##.##.20##"
                       label="Date"
                     ></VTextField>
                   </VCol>
