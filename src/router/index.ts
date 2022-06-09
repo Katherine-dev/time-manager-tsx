@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../components/Home'
-import WorkPage from '../components/WorkPage'
-import StudyPage from '../components/StudyPage'
-import PlacesToVisit from '@/components/PlacesToVisit'
+import Home from '../components/HomePage/Home'
+import WorkPage from '../components/WorkPage/WorkPage'
+import StudyPage from '../components/StudyPage/StudyPage'
+import PlacesToVisit from '@/components/PlacesToVisit/PlacesToVisit'
 
 Vue.use(VueRouter)
 

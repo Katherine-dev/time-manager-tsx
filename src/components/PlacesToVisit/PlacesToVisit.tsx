@@ -1,7 +1,7 @@
 import { VNode } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCol, VContainer, VDialog, VFileInput, VIcon, VImg, VRow, VSpacer, VTab, VTabItem, VTabs, VTextarea, VTextField, VVirtualScroll } from 'vuetify/lib';
-import { VueComponent } from '../shims-vue';
+import { VueComponent } from '../../shims-vue';
 
 import styles from './PlacesToVisit.css?module';
 
