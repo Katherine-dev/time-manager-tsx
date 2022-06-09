@@ -74,7 +74,7 @@ export default class StudyPage extends VueComponent {
     timed: false,
   };
 
-  mounted(): void {
+  private mounted(): void {
     const localNotes = localStorage.getItem('events');
     if (localNotes) {
       this.events = JSON.parse(localNotes);

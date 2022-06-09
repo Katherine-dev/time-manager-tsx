@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../components/Home'
 import WorkPage from '../components/WorkPage'
 import StudyPage from '../components/StudyPage'
+import PlacesToVisit from '@/components/PlacesToVisit'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes: Array<RouteConfig> = [
     path: '/study',
     name: 'StudyPage',
     component: StudyPage
+  },
+  {
+    path: '/places',
+    name: 'PlacesToVisit',
+    component: PlacesToVisit
   },
 
 ]
