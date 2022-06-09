@@ -1,5 +1,6 @@
+import { VNode } from 'vue';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { VApp, VAppBar, VAppBarNavIcon, VContainer, VDivider, VList, VListItem, VListItemContent, VListItemTitle, VMain, VNavigationDrawer } from 'vuetify/lib';
+import { VApp, VAppBar, VAppBarNavIcon, VBtn, VContainer, VDivider, VList, VListItem, VListItemContent, VListItemTitle, VMain, VNavigationDrawer, VSpacer } from 'vuetify/lib';
 import { VueComponent } from '../shims-vue';
 
 import styles from './MainView.css?module';
@@ -44,8 +45,50 @@ export default class MainView extends VueComponent<Props> {
 
   private drawer: boolean = false;
 
+  private activeTimeButton: string = '';
+
+  private created(): void {
+    if (this.$route.query?.time === 'now') {
+      this.activeTimeButton = 'now'
+    } else if (this.$route.query?.time === 'later') {
+      this.activeTimeButton = 'later'
+    }
+  }
+
   private toggleDrawer(): void {
     this.drawer = !this.drawer;
+  }
+
+  private togglePlaceButtons(time: string): void {
+    this.activeTimeButton = time;
+
+    if (this.$route.query?.time !== time) {
+      this.$router.push({ query: Object.assign({ ...this.$route.query }, { time: time }) })
+    }
+  }
+
+  private renderPlacesButtons(): VNode | undefined {
+    if (this.$route.path === '/places') {
+      return (
+        <div>
+          <VBtn
+            text
+            onClick={() => this.togglePlaceButtons('now')}
+            class={{ [styles.activeButton]: this.activeTimeButton === 'now' }}
+          >
+            Сейчас
+          </VBtn>
+
+          <VBtn
+            text
+            onClick={() => this.togglePlaceButtons('later')}
+            class={{ [styles.activeButton]: this.activeTimeButton === 'later' }}
+          >
+            Позже
+          </VBtn>
+        </div>
+      )
+    }
   }
 
   render() {
@@ -93,6 +136,8 @@ export default class MainView extends VueComponent<Props> {
 
         <VAppBar app>
           <VAppBarNavIcon onClick={this.toggleDrawer}></VAppBarNavIcon>
+          <VSpacer></VSpacer>
+          {this.renderPlacesButtons()}
         </VAppBar>
 
         <VMain
@@ -110,7 +155,7 @@ export default class MainView extends VueComponent<Props> {
 
   private changeRoute(route: string): void {
     if (this.$route.path !== route) {
-      this.$router.push(route)
+      this.$router.push({ path: route, query: { time: 'now' } });
     }
   }
 }

@@ -13,3 +13,7 @@
 .fullHeight {
   height: 100%;
 }
+
+.activeButton {
+  color: #2196F3 !important;
+}
