@@ -4,6 +4,7 @@ import Home from '../components/HomePage/Home'
 import WorkPage from '../components/WorkPage/WorkPage'
 import StudyPage from '../components/StudyPage/StudyPage'
 import PlacesToVisit from '@/components/PlacesToVisit/PlacesToVisit'
+import RecipesPage from '@/components/RecipesPage/RecipesPage'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes: Array<RouteConfig> = [
     path: '/places',
     name: 'PlacesToVisit',
     component: PlacesToVisit
+  },
+  {
+    path: '/recipes',
+    name: 'RecipesPage',
+    component: RecipesPage
   },
 
 ]
