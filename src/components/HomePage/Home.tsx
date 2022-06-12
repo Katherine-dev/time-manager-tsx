@@ -1,4 +1,4 @@
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component} from 'vue-property-decorator';
 import { VueComponent } from '../../shims-vue';
 
 

@@ -1,5 +1,5 @@
 import { VNode } from 'vue';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component} from 'vue-property-decorator';
 import { VBtn, VCalendar, VCard, VCardActions, VCardText, VCardTitle, VCheckbox, VCol, VContainer, VDialog, VRow, VSheet, VSpacer, VMenu, VTextField, VTimePicker, VFabTransition, VIcon, VToolbar, VToolbarTitle } from 'vuetify/lib';
 import { VueComponent } from '../../shims-vue';
 

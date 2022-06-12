@@ -48,9 +48,9 @@ export default class MainView extends VueComponent<Props> {
   private activeTimeButton: string = '';
 
   private created(): void {
-    if (this.$route.query?.time === 'now') {
+    if (this.$route.path === '/places' && this.$route.query?.time === 'now') {
       this.activeTimeButton = 'now'
-    } else if (this.$route.query?.time === 'later') {
+    } else if (this.$route.path === '/places' && this.$route.query?.time === 'later') {
       this.activeTimeButton = 'later'
     }
   }
@@ -60,10 +60,12 @@ export default class MainView extends VueComponent<Props> {
   }
 
   private togglePlaceButtons(time: string): void {
-    this.activeTimeButton = time;
+    if (this.$route.path === '/places') {
+      this.activeTimeButton = time;
 
-    if (this.$route.query?.time !== time) {
-      this.$router.push({ query: Object.assign({ ...this.$route.query }, { time: time }) })
+      if (this.$route.query?.time !== time) {
+        this.$router.push({ query: Object.assign({ ...this.$route.query }, { time: time }) })
+      }
     }
   }
 
@@ -154,8 +156,10 @@ export default class MainView extends VueComponent<Props> {
   };
 
   private changeRoute(route: string): void {
-    if (this.$route.path !== route) {
+    if (this.$route.path !== route && route === '/places') {
       this.$router.push({ path: route, query: { time: 'now' } });
+    } else if (this.$route.path !== route && route !== '/places') {
+      this.$router.push({ path: route});
     }
   }
 }

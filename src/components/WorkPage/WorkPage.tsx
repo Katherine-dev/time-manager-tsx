@@ -1,4 +1,4 @@
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCol, VContainer, VDialog, VRow, VSpacer, VTextarea } from 'vuetify/lib';
 import { VueComponent } from '../../shims-vue';
 
