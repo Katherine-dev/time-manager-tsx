@@ -23,6 +23,7 @@
     "@vue/cli-plugin-typescript": "~4.5.13",
     "@vue/cli-plugin-vuex": "~4.5.13",
     "@vue/cli-service": "~4.5.13",
+    "gh-pages": "^4.0.0",
     "sass": "~1.32.0",
     "sass-loader": "^10.0.0",
     "typescript": "~4.1.5",
