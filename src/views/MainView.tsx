@@ -29,10 +29,10 @@ export default class MainView extends VueComponent<Props> {
       title: 'Work',
       route: '/work'
     },
-    {
-      title: 'Hobby',
-      route: '/hobby'
-    },
+    // {
+    //   title: 'Hobby',
+    //   route: '/hobby'
+    // },
     {
       title: 'Places',
       route: '/places'

@@ -138,7 +138,10 @@ export default class PlacesToVisit extends VueComponent {
   render() {
     return (
       <div class={styles['card-container']}>
+        <VContainer>
         {this.renderCardsNode()}
+
+        </VContainer>
         <VBtn
           color="blue darken-2"
           dark
