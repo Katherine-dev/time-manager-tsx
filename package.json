@@ -1,7 +1,8 @@
 {
-  "name": "tsx-project",
+  "name": "time-manager-tsx",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://katherine-dev.github.io/time-manager-tsx",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
