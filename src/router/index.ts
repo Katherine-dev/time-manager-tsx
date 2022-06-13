@@ -11,26 +11,30 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/',
+    redirect: {name: 'Home'}
+  },
+  {
+    path: '/time-manager-tsx/',
     name: 'Home',
     component: Home
   },
   {
-    path: '/work',
+    path: '/time-manager-tsx/work',
     name: 'WorkPage',
     component: WorkPage
   },
   {
-    path: '/study',
+    path: '/time-manager-tsx/study',
     name: 'StudyPage',
     component: StudyPage
   },
   {
-    path: '/places',
+    path: '/time-manager-tsx/places',
     name: 'PlacesToVisit',
     component: PlacesToVisit
   },
   {
-    path: '/recipes',
+    path: '/time-manager-tsx/recipes',
     name: 'RecipesPage',
     component: RecipesPage
   },
