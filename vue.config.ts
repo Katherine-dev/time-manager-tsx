@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/time-manager-tsx/',
+  publicPath: '',
   transpileDependencies: [
     'vuetify'
   ]
