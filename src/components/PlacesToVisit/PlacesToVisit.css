@@ -1,0 +1,23 @@
+.card-actions {
+  justify-content: space-between;
+}
+
+.card-container {
+  width: 100%;
+  height: 100%;
+}
+
+.fab-btn {
+  bottom: 0 !important;
+  position: absolute;
+  margin: 0 0 16px 16px;
+}
+
+.places-dialog {
+  max-height: 400px;
+}
+
+.places-dialogText {
+  overflow: auto;
+  max-height: 440px;
+}

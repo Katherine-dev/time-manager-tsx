@@ -1,0 +1,19 @@
+.main-content {
+  height: 100%;
+  max-height: calc(100vh - 56px);
+  padding: 0 !important;
+  flex-basis: max-content;
+}
+
+.main-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+.activeButton {
+  color: #2196F3 !important;
+}

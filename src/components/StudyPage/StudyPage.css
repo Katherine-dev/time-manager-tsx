@@ -1,0 +1,14 @@
+.fab-btn {
+  bottom: 0 !important;
+  position: absolute;
+  margin: 0 0 16px 16px;
+  right: 44px !important;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+.card-actions {
+  justify-content: space-between;
+}
