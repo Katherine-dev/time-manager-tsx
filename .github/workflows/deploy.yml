@@ -1,7 +1,7 @@
 name: Deploy on github pages
 on:
   push:
-    branches: master
+    branches: refactor
 jobs:
   deploy:
     runs-on: ubuntu-latest
