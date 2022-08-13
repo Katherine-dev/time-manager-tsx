@@ -1,7 +1,23 @@
 import { VueComponent } from '@/shims-vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { DataTableHeader } from 'vuetify';
-import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCol, VContainer, VDataTable, VDialog, VDivider, VIcon, VRow, VSpacer, VTextField, VToolbar } from 'vuetify/lib';
+import {
+  VBtn,
+  VCard,
+  VCardActions,
+  VCardText,
+  VCardTitle,
+  VCol,
+  VContainer,
+  VDataTable,
+  VDialog,
+  VDivider,
+  VIcon,
+  VRow,
+  VSpacer,
+  VTextField,
+  VToolbar,
+} from 'vuetify/lib';
 import { VToolbarTitle } from 'vuetify/lib/components';
 
 import styles from './RecipesPage.css?module';
@@ -27,99 +43,102 @@ interface TableItem {
 
 @Component
 export default class RecipesPage extends VueComponent {
-  private dialog: boolean = false;
+  private dialog = false;
 
-  private dialogDelete: boolean = false;
+  private dialogDelete = false;
 
   private headers: Array<RecipeTableColumn> = [
     {
       text: 'Dish',
       align: 'start',
       sortable: true,
-      value: 'name'
+      value: 'name',
     },
     {
       text: 'Link',
       align: 'start',
       sortable: false,
-      value: 'link'
+      value: 'link',
     },
     {
       text: 'Actions',
       align: 'center',
       sortable: false,
-      value: 'actions'
+      value: 'actions',
     },
   ];
 
   private dishes: Array<Dish> = [{ name: 'шашлык', link: 'https://1000.menu/cooking/990-shashlyk-iz-svininy-na-kefire' }];
 
-  private editedIndex: number = -1;
+  private editedIndex = -1;
 
   private editedItem: Dish = {
     name: '',
-    link: ''
+    link: '',
   };
 
   private defaultItem: Dish = {
     name: '',
-    link: ''
+    link: '',
   };
 
   @Watch('dialog')
   onDialogStateChange(val: boolean) {
-    val || this.close()
+    if (!val) {
+      this.close();
+    }
   }
 
   @Watch('dialogDelete')
   onDialogDeleteStateChange(val: boolean) {
-    val || this.closeDelete()
+    if (!val) {
+      this.closeDelete();
+    }
   }
 
   private mounted(): void {
-    let localRecipes = localStorage.getItem('recipes');
+    const localRecipes = localStorage.getItem('recipes');
 
     if (localRecipes) {
       this.dishes = JSON.parse(localRecipes);
     } else {
-      let parsed = JSON.stringify(this.dishes);
+      const parsed = JSON.stringify(this.dishes);
       localStorage.setItem('recipes', parsed);
     }
-  };
-
+  }
 
   private editItem(item: Dish) {
     this.editedIndex = this.dishes.indexOf(item);
-    this.editedItem = Object.assign({}, item);
+    this.editedItem = { ...item };
     this.dialog = true;
-  };
+  }
 
   private deleteItem(item: Dish) {
     this.editedIndex = this.dishes.indexOf(item);
-    this.editedItem = Object.assign({}, item);
+    this.editedItem = { ...item };
     this.dialogDelete = true;
-  };
+  }
 
   private deleteItemConfirm() {
     this.dishes.splice(this.editedIndex, 1);
     this.closeDelete();
-  };
+  }
 
   private close() {
     this.dialog = false;
     this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem);
+      this.editedItem = { ...this.defaultItem };
       this.editedIndex = -1;
-    })
-  };
+    });
+  }
 
   private closeDelete() {
     this.dialogDelete = false;
     this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem);
+      this.editedItem = { ...this.defaultItem };
       this.editedIndex = -1;
-    })
-  };
+    });
+  }
 
   private save() {
     if (this.editedIndex > -1) {
@@ -129,7 +148,7 @@ export default class RecipesPage extends VueComponent {
     }
     this.close();
     localStorage.setItem('recipes', JSON.stringify(this.dishes));
-  };
+  }
 
   render() {
     return (
@@ -140,8 +159,7 @@ export default class RecipesPage extends VueComponent {
           sort-by="id"
           class="elevation-1"
           scopedSlots={{
-            top: () =>
-              <VToolbar
+            top: () => <VToolbar
                 flat
               >
                 <VToolbarTitle>Рецептики</VToolbarTitle>
@@ -155,9 +173,8 @@ export default class RecipesPage extends VueComponent {
                   v-model={this.dialog}
                   max-width="500px"
                   scopedSlots={{
-                    //TODO: Change types
-                    activator: ({ on, attrs }: { on: any, attrs: any }) =>
-                      <VBtn
+                    // TODO: Change types
+                    activator: ({ on, attrs }: { on: any, attrs: any }) => <VBtn
                         color="primary"
                         dark
                         class="mb-2"
@@ -165,7 +182,7 @@ export default class RecipesPage extends VueComponent {
                         on={on}
                       >
                         New Item
-                      </VBtn>
+                      </VBtn>,
                   }}
                 >
                   <VCard>
@@ -231,10 +248,8 @@ export default class RecipesPage extends VueComponent {
                     </VCardActions>
                   </VCard>
                 </VDialog>
-              </VToolbar>
-            ,
-            'item.actions': (item: TableItem) =>
-              <div>
+              </VToolbar>,
+            'item.actions': (item: TableItem) => <div>
                 <VIcon
                   small
                   class="mr-2"
@@ -248,14 +263,12 @@ export default class RecipesPage extends VueComponent {
                 >
                   mdi-delete
                 </VIcon>
-              </div>
-            ,
-            'item.link': (item: TableItem) =>
-              <a href={item.value}>{item.value}</a>
+              </div>,
+            'item.link': (item: TableItem) => <a href={item.value}>{item.value}</a>,
           }}
         >
         </VDataTable>
       </div>
-    )
+    );
   }
 }

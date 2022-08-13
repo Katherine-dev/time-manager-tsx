@@ -1,8 +1,28 @@
 import { VNode } from 'vue';
-import { Component} from 'vue-property-decorator';
-import { VBtn, VCalendar, VCard, VCardActions, VCardText, VCardTitle, VCheckbox, VCol, VContainer, VDialog, VRow, VSheet, VSpacer, VMenu, VTextField, VTimePicker, VFabTransition, VIcon, VToolbar, VToolbarTitle } from 'vuetify/lib';
+import { Component } from 'vue-property-decorator';
+import {
+  VBtn,
+  VCalendar,
+  VCard,
+  VCardActions,
+  VCardText,
+  VCardTitle,
+  VCheckbox,
+  VCol,
+  VContainer,
+  VDialog,
+  VRow,
+  VSheet,
+  VSpacer,
+  VMenu,
+  VTextField,
+  VTimePicker,
+  VFabTransition,
+  VIcon,
+  VToolbar,
+  VToolbarTitle,
+} from 'vuetify/lib';
 import { VueComponent } from '../../shims-vue';
-
 
 import styles from './StudyPage.css?module';
 
@@ -23,18 +43,28 @@ interface MyEvent {
 
 @Component
 export default class StudyPage extends VueComponent {
-  //data
-  private value: string = '';
+  // data
+  private value = '';
+
   private colors: Array<string> = ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'];
-  private dialog: boolean = false;
-  private isActiveTimeMenuStart: boolean = false;
-  private isActiveTimeMenuEnd: boolean = false;
-  private dateStart: string = '';
+
+  private dialog = false;
+
+  private isActiveTimeMenuStart = false;
+
+  private isActiveTimeMenuEnd = false;
+
+  private dateStart = '';
+
   private timeStart: Date | null = null;
+
   private timeEnd: Date | null = null;
+
   private selectedElement: EventTarget | null = null;
-  private selectedOpen: boolean = false;
-  private mode: string = '';
+
+  private selectedOpen = false;
+
+  private mode = '';
 
   private events: Array<MyEvent> = [
     {
@@ -44,7 +74,7 @@ export default class StudyPage extends VueComponent {
       end: new Date('2022-05-30T14:24').getTime(),
       color: this.colors[0],
       timed: true,
-    }
+    },
   ];
 
   private newEvent: MyEvent = {
@@ -77,35 +107,38 @@ export default class StudyPage extends VueComponent {
   private mounted(): void {
     const localNotes = localStorage.getItem('events');
     if (localNotes) {
-      this.events = JSON.parse(localNotes);
-      this.events.forEach(el => {
+      const localEvents = JSON.parse(localNotes);
+      localEvents.forEach((el: MyEvent, index: number) => {
+        this.events.push(el);
         if (el.start) {
-          el.start = new Date(el.start);
+          this.events[index].start = new Date(el.start);
         }
         if (el.end) {
-          el.end = new Date(el.end);
+          this.events[index].end = new Date(el.end);
         }
-      })
+      });
     } else {
       const parsed = JSON.stringify(this.events);
 
       localStorage.setItem('events', parsed);
     }
-  };
+  }
 
-  //methods
+  // methods
   private saveTime(): void {
     // @ts-expect-error method exist
     this.$refs.menu.save(this.timeStart);
-    let partsDate = this.dateStart.split('.');
+    const partsDate = this.dateStart.split('.');
     let partsTime = this.timeStart?.toString().split(':');
     if (partsTime?.length) {
-      this.newEvent.start = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1, Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1])).getTime();
+      this.newEvent.start = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1,
+        Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1])).getTime();
     }
     partsTime = this.timeEnd?.toString().split(':');
 
     if (partsTime?.length) {
-      this.newEvent.end = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1, Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1])).getTime();
+      this.newEvent.end = new Date(Number(partsDate[2]), Number(partsDate[1]) - 1,
+        Number(partsDate[0]), Number(partsTime[0]), Number(partsTime[1])).getTime();
     }
 
     if (this.mode !== 'edit') {
@@ -131,23 +164,23 @@ export default class StudyPage extends VueComponent {
             max-width="290px"
             min-width="290px"
             scopedSlots={{
-              //TODO: Change types
-              activator: ({ on, attrs }: { on: any, attrs: any }) =>
-                <VTextField
+              // TODO: Change types
+              activator: ({ on, attrs }: { on: any, attrs: any }) => <VTextField
                   v-model={this.timeStart}
                   label="Start Time"
                   prepend-icon="mdi-clock-time-four-outline"
                   readonly
                   {...attrs}
                   on={on}
-                ></VTextField>
+                ></VTextField>,
             }}
           >
             {this.timePickerNode(value)}
           </VMenu>
         </VCol>
-      )
-    } else if (this.newEvent.timed && value === 'end') {
+      );
+    }
+    if (this.newEvent.timed && value === 'end') {
       return (
         <VCol
           cols="auto"
@@ -164,23 +197,23 @@ export default class StudyPage extends VueComponent {
             max-width="290px"
             min-width="290px"
             scopedSlots={{
-              activator: ({ on, attrs }: { on: any, attrs: any }) =>
-                <VTextField
+              activator: ({ on, attrs }: { on: any, attrs: any }) => <VTextField
                   v-model={this.timeEnd}
                   label="End Time"
                   prepend-icon="mdi-clock-time-four-outline"
                   readonly
                   {...attrs}
                   on={on}
-                ></VTextField>
+                ></VTextField>,
             }}
           >
             {this.timePickerNode(value)}
           </VMenu>
         </VCol>
-      )
+      );
     }
-  };
+    return undefined;
+  }
 
   private timePickerNode(value: string): VNode | undefined {
     if (value === 'start') {
@@ -191,8 +224,9 @@ export default class StudyPage extends VueComponent {
           onChange={this.saveTime}
           format="24hr"
         ></VTimePicker>
-      )
-    } else if (value === 'end') {
+      );
+    }
+    if (value === 'end') {
       return (
         <VTimePicker
           v-model={this.timeEnd}
@@ -200,58 +234,49 @@ export default class StudyPage extends VueComponent {
           onChange={this.saveTime}
           format="24hr"
         ></VTimePicker>
-      )
+      );
     }
-
+    return undefined;
   }
-
-  private getEventColor(event: MyEvent): string {
-    return event.color
-  };
 
   private close(): void {
     this.dialog = false;
     this.mode = '';
 
     this.$nextTick(() => {
-      this.newEvent = Object.assign({}, this.defaultEvent);
+      this.newEvent = { ...this.defaultEvent };
       this.dateStart = '';
       this.timeStart = null;
       this.timeEnd = null;
-    })
-  };
+    });
+  }
 
   private save(): void {
-
     if (this.mode === 'edit') {
-      this.events.forEach((el, index) => {
-        console.log(el.id, this.newEvent.id);
-
+      this.events.forEach((el: MyEvent) => {
         if (el.id === this.newEvent.id) {
-          el.name = this.newEvent.name;
-          el.start = this.newEvent.start;
-          el.end = this.newEvent.end;
-          el.timed = this.newEvent.timed;
+          this.events.splice(this.events.indexOf(el));
+          this.events.push(this.newEvent);
         }
-      })
+      });
     } else if (this.mode === 'create') {
       this.events.push(this.newEvent);
     }
     localStorage.setItem('events', JSON.stringify(this.events));
-    
+
     this.mode = '';
     this.close();
-  };
+  }
 
   private addEvent(): void {
     this.dialog = true;
     this.mode = 'create';
   }
 
-  render() {
-    let listeners = {
-      'click:event': this.showEvent
-    }
+  render(): VNode | undefined {
+    const listeners = {
+      'click:event': this.showEvent,
+    };
     return (
       <div class={styles.fullHeight}>
         <VFabTransition>
@@ -277,7 +302,7 @@ export default class StudyPage extends VueComponent {
             events={this.events}
             event-overlap-mode="stack"
             event-overlap-threshold="30"
-            event-color={this.getEventColor}
+            event-color={(evt: MyEvent) => evt.color}
             {...{ on: listeners }}
           // onChange={() => {this.getEvents({'30.05.2022', '5.06.2022'})}}
           ></VCalendar>
@@ -313,7 +338,7 @@ export default class StudyPage extends VueComponent {
                 <VBtn
                   text
                   color="secondary"
-                  onClick={() => { this.selectedOpen = false }}
+                  onClick={() => { this.selectedOpen = false; }}
                 >
                   Cancel
                 </VBtn>
@@ -332,7 +357,7 @@ export default class StudyPage extends VueComponent {
         <VDialog
           v-model={this.dialog}
           max-width="700px"
-          //TODO: Add details to dialog form
+          // TODO: Add details to dialog form
         >
           <VCard>
             <VCardTitle>
@@ -402,27 +427,29 @@ export default class StudyPage extends VueComponent {
           </VCard>
         </VDialog>
       </div>
-    )
-  };
+    );
+  }
 
   private showEvent({ nativeEvent, event }: { nativeEvent: Event, event: MyEvent }): void {
-    const self = this;
+    // const self = this;
 
     const open = () => {
-      self.selectedEvent = event
-      this.selectedElement = nativeEvent.target
-      requestAnimationFrame(() => requestAnimationFrame(() => self.selectedOpen = true))
-    }
+      this.selectedEvent = event;
+      this.selectedElement = nativeEvent.target;
+      this.selectedOpen = true;
+      // requestAnimationFrame(() => requestAnimationFrame(() =>
+      // {self.selectedOpen = true; return}));
+    };
 
     if (this.selectedOpen) {
-      this.selectedOpen = false
-      requestAnimationFrame(() => requestAnimationFrame(() => open()))
+      this.selectedOpen = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => open()));
     } else {
-      open()
+      open();
     }
 
-    nativeEvent.stopPropagation()
-  };
+    nativeEvent.stopPropagation();
+  }
 
   private editEvent(): void {
     this.newEvent = { ...this.selectedEvent };
@@ -431,12 +458,11 @@ export default class StudyPage extends VueComponent {
     if (this.newEvent.start && this.newEvent.end) {
       this.dateStart = new Date(this.newEvent.start).toISOString().slice(0, 10);
 
-      let partsDate = this.dateStart.split('-');
+      const partsDate = this.dateStart.split('-');
       this.dateStart = partsDate.reverse().join('.');
 
       this.timeStart = new Date(this.newEvent.start);
       this.timeEnd = new Date(this.newEvent.end);
-
     }
     this.mode = 'edit';
   }
@@ -444,10 +470,8 @@ export default class StudyPage extends VueComponent {
   private deleteEvent(): void {
     this.mode = 'delete';
     const self = this;
-    this.events = this.events.filter(el => 
-      el.id !== self.selectedEvent.id
-    )
-    
+    this.events = this.events.filter((el) => el.id !== self.selectedEvent.id);
+
     this.selectedOpen = false;
     this.save();
   }

@@ -1,7 +1,18 @@
 import { Component } from 'vue-property-decorator';
-import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCol, VContainer, VDialog, VRow, VSpacer, VTextarea } from 'vuetify/lib';
+import {
+  VBtn,
+  VCard,
+  VCardActions,
+  VCardText,
+  VCardTitle,
+  VCol,
+  VContainer,
+  VDialog,
+  VRow,
+  VSpacer,
+  VTextarea,
+} from 'vuetify/lib';
 import { VueComponent } from '../../shims-vue';
-
 
 import styles from './WorkPage.css?module';
 
@@ -10,10 +21,8 @@ interface Weekday {
   description: string
 }
 
-
 @Component
 export default class WorkPage extends VueComponent {
-
   private cards: Array<Weekday> = [
     { title: 'Понедельник', description: 'fdfd' },
     { title: 'Вторник', description: 'vfdfd' },
@@ -24,44 +33,44 @@ export default class WorkPage extends VueComponent {
     { title: 'Воскресенье', description: '' },
   ];
 
-  private dialog: boolean = false;
+  private dialog = false;
 
   private editedItem: Weekday = {
     title: '',
-    description: ''
+    description: '',
   };
 
   private defaultItem: Weekday = {
     title: '',
-    description: ''
+    description: '',
   };
 
-  private editedIndex: number = 0;
+  private editedIndex = 0;
 
   mounted(): void {
     const localNotes = localStorage.getItem('cards');
-    
+
     if (localNotes) {
       this.cards = JSON.parse(localNotes);
     } else {
       const parsed = JSON.stringify(this.cards);
       localStorage.setItem('cards', parsed);
     }
-  };
+  }
 
   private editNote(note: Weekday): void {
     this.editedIndex = this.cards.indexOf(note);
-    this.editedItem = Object.assign({}, note);
+    this.editedItem = { ...note };
     this.dialog = true;
-  };
+  }
 
   private close(): void {
     this.dialog = false;
     this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem);
+      this.editedItem = { ...this.defaultItem };
       this.editedIndex = -1;
-    })
-  };
+    });
+  }
 
   private save(): void {
     if (this.editedIndex > -1) {
@@ -69,15 +78,14 @@ export default class WorkPage extends VueComponent {
       localStorage.setItem('cards', JSON.stringify(this.cards));
     }
     this.close();
-  };
+  }
 
   render() {
     return (
       <div>
         <VRow dense>
           {
-            this.cards.map((card, index) => {
-              return (
+            this.cards.map((card, index) => (
                 <VCol
                   key={card.title + index}
                   cols={6}
@@ -99,8 +107,7 @@ export default class WorkPage extends VueComponent {
                     </VCardActions>
                   </VCard>
                 </VCol>
-              )
-            })
+            ))
           }
         </VRow>
 
@@ -149,6 +156,6 @@ export default class WorkPage extends VueComponent {
           </VCard>
         </VDialog>
       </div>
-    )
+    );
   }
 }

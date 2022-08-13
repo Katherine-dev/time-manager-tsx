@@ -1,6 +1,19 @@
 import { VNode } from 'vue';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { VApp, VAppBar, VAppBarNavIcon, VBtn, VContainer, VDivider, VList, VListItem, VListItemContent, VListItemTitle, VMain, VNavigationDrawer, VSpacer } from 'vuetify/lib';
+import {
+  VApp,
+  VAppBar,
+  VAppBarNavIcon,
+  VBtn, VContainer,
+  VDivider,
+  VList,
+  VListItem,
+  VListItemContent,
+  VListItemTitle,
+  VMain,
+  VNavigationDrawer,
+  VSpacer,
+} from 'vuetify/lib';
 import { VueComponent } from '../shims-vue';
 
 import styles from './MainView.css?module';
@@ -16,18 +29,17 @@ interface Props {
 
 @Component
 export default class MainView extends VueComponent<Props> {
-
   @Prop()
   private msg!: string;
 
   private items: Array<NavigationLink> = [
     {
       title: 'Study',
-      route: '/study'
+      route: '/study',
     },
     {
       title: 'Work',
-      route: '/work'
+      route: '/work',
     },
     // {
     //   title: 'Hobby',
@@ -35,23 +47,23 @@ export default class MainView extends VueComponent<Props> {
     // },
     {
       title: 'Places',
-      route: '/places'
+      route: '/places',
     },
     {
       title: 'Recipes',
-      route: '/recipes'
+      route: '/recipes',
     },
   ];
 
-  private drawer: boolean = false;
+  private drawer = false;
 
-  private activeTimeButton: string = '';
+  private activeTimeButton = '';
 
   private created(): void {
     if (this.$route.path === '/places' && this.$route.query?.time === 'now') {
-      this.activeTimeButton = 'now'
+      this.activeTimeButton = 'now';
     } else if (this.$route.path === '/places' && this.$route.query?.time === 'later') {
-      this.activeTimeButton = 'later'
+      this.activeTimeButton = 'later';
     }
   }
 
@@ -64,7 +76,7 @@ export default class MainView extends VueComponent<Props> {
       this.activeTimeButton = time;
 
       if (this.$route.query?.time !== time) {
-        this.$router.push({ query: Object.assign({ ...this.$route.query }, { time: time }) })
+        this.$router.push({ query: { ...this.$route.query, time } });
       }
     }
   }
@@ -89,8 +101,9 @@ export default class MainView extends VueComponent<Props> {
             Позже
           </VBtn>
         </div>
-      )
+      );
     }
+    return undefined;
   }
 
   render() {
@@ -119,8 +132,7 @@ export default class MainView extends VueComponent<Props> {
             nav
           >
             {
-              this.items.map(item => {
-                return (
+              this.items.map((item) => (
                   <VListItem
                     link
                   >
@@ -130,8 +142,7 @@ export default class MainView extends VueComponent<Props> {
                       </VListItemTitle>
                     </VListItemContent>
                   </VListItem>
-                )
-              })
+              ))
             }
           </VList>
         </VNavigationDrawer>
@@ -152,14 +163,14 @@ export default class MainView extends VueComponent<Props> {
         </VMain>
 
       </VApp>
-    )
-  };
+    );
+  }
 
   private changeRoute(route: string): void {
     if (this.$route.path !== route && route === '/places') {
       this.$router.push({ path: route, query: { time: 'now' } });
     } else if (this.$route.path !== route && route !== '/places') {
-      this.$router.push({ path: route});
+      this.$router.push({ path: route });
     }
   }
 }

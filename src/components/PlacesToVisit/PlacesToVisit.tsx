@@ -1,6 +1,26 @@
 import { VNode } from 'vue';
 import { Component } from 'vue-property-decorator';
-import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCol, VContainer, VDialog, VFileInput, VIcon, VImg, VRow, VSpacer, VTab, VTabItem, VTabs, VTextarea, VTextField, VVirtualScroll } from 'vuetify/lib';
+import {
+  VBtn,
+  VCard,
+  VCardActions,
+  VCardText,
+  VCardTitle,
+  VCol,
+  VContainer,
+  VDialog,
+  VFileInput,
+  VIcon,
+  VImg,
+  VRow,
+  VSpacer,
+  VTab,
+  VTabItem,
+  VTabs,
+  VTextarea,
+  VTextField,
+  VVirtualScroll,
+} from 'vuetify/lib';
 import { VueComponent } from '../../shims-vue';
 
 import styles from './PlacesToVisit.css?module';
@@ -14,44 +34,46 @@ interface Place {
 
 @Component
 export default class PlacesToVisit extends VueComponent {
-
   private placesNow: Array<Place> = [
-    { 
+    {
       id: 1,
       name: 'Байкал',
       description: 'Жесть, вот это озеро',
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/%D0%9C%D1%8B%D1%81_%D0%9B%D1%83%D0%B4%D0%B0%D1%80%D1%8C%2C_17_%D0%B8%D1%8E%D0%BD%D1%8F_2013_%D0%B3%D0%BE%D0%B4%D0%B0.jpg' 
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/%D0%9C%D1%8B%D1%81_%D0%9B%D1%83%D0%B4%D0%B0%D1%80%D1%8C%2C_17_%D0%B8%D1%8E%D0%BD%D1%8F_2013_%D0%B3%D0%BE%D0%B4%D0%B0.jpg',
     },
-    { 
+    {
       id: 1,
       name: 'Байкал',
       description: 'Жесть, вот это озеро',
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/%D0%9C%D1%8B%D1%81_%D0%9B%D1%83%D0%B4%D0%B0%D1%80%D1%8C%2C_17_%D0%B8%D1%8E%D0%BD%D1%8F_2013_%D0%B3%D0%BE%D0%B4%D0%B0.jpg' 
-    }
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/%D0%9C%D1%8B%D1%81_%D0%9B%D1%83%D0%B4%D0%B0%D1%80%D1%8C%2C_17_%D0%B8%D1%8E%D0%BD%D1%8F_2013_%D0%B3%D0%BE%D0%B4%D0%B0.jpg',
+    },
   ];
-  private placesLater: Array<Place> = [];
-  private dialog: boolean = false;
-  private mode: string = '';
-  private userImage: string | ArrayBuffer = '';
 
+  private placesLater: Array<Place> = [];
+
+  private dialog = false;
+
+  private mode = '';
+
+  private userImage: string | ArrayBuffer = '';
 
   private newPlace: Place = {
     id: 0,
     name: '',
     description: '',
-    imageUrl: ''
+    imageUrl: '',
   };
 
   private defaultPlace: Place = {
     id: 0,
     name: '',
     description: '',
-    imageUrl: ''
+    imageUrl: '',
   };
 
   private mounted(): void {
-    let localPlacesNow = localStorage.getItem('placesNow');
-    let localPlacesLater = localStorage.getItem('placesLater');
+    const localPlacesNow = localStorage.getItem('placesNow');
+    const localPlacesLater = localStorage.getItem('placesLater');
 
     if (localPlacesNow && localPlacesLater) {
       this.placesNow = JSON.parse(localPlacesNow);
@@ -59,11 +81,11 @@ export default class PlacesToVisit extends VueComponent {
     } else {
       let parsed = JSON.stringify(this.placesNow);
       localStorage.setItem('placesNow', parsed);
-      
+
       parsed = JSON.stringify(this.placesLater);
       localStorage.setItem('placesLater', parsed);
     }
-  };
+  }
 
   private addPlace(): void {
     this.dialog = true;
@@ -75,65 +97,58 @@ export default class PlacesToVisit extends VueComponent {
     this.mode = '';
 
     this.$nextTick(() => {
-      this.newPlace = Object.assign({}, this.defaultPlace);
-    })
-  };
+      this.newPlace = { ...this.defaultPlace };
+    });
+  }
 
   private save(): void {
-
     if (this.mode === 'edit' && this.$route.query.time === 'now') {
       this.placesNow.forEach((el, index) => {
-
         if (el.id === this.newPlace.id) {
-          el.name = this.newPlace.name;
-          el.description = this.newPlace.description;
-          el.imageUrl = this.newPlace.imageUrl;
+          this.placesNow.splice(this.placesNow.indexOf(el));
+          this.placesNow.push(this.newPlace);
         }
-      })
+      });
     } else if (this.mode === 'edit' && this.$route.query.time === 'later') {
       this.placesLater.forEach((el, index) => {
-
         if (el.id === this.newPlace.id) {
-          el.name = this.newPlace.name;
-          el.description = this.newPlace.description;
-          el.imageUrl = this.newPlace.imageUrl;
+          this.placesLater.splice(this.placesLater.indexOf(el));
+          this.placesLater.push(this.newPlace);
         }
-      })
-
+      });
     } else if (this.mode === 'create' && this.$route.query.time === 'now') {
       this.placesNow.push(this.newPlace);
-    }  else if (this.mode === 'create' && this.$route.query.time === 'later') {
+    } else if (this.mode === 'create' && this.$route.query.time === 'later') {
       this.placesLater.push(this.newPlace);
     }
     localStorage.setItem('placesNow', JSON.stringify(this.placesNow));
     localStorage.setItem('placesLater', JSON.stringify(this.placesLater));
-    
+
     this.mode = '';
     this.close();
-  };
+  }
 
   private onFileChange(e: File): void {
-    var files = e;
-    console.log(e)
+    const files = e;
+    console.log(e);
 
-    this.createImage(files)
+    this.createImage(files);
   }
 
   private createImage(file: File): void {
-    var reader = new FileReader()
-    var vm = this
+    const reader = new FileReader();
+    const vm = this;
 
     reader.onload = (e) => {
       console.log(e);
-      
+
       if (e?.target?.result) {
         vm.newPlace.imageUrl = e?.target?.result.toString();
         console.log(vm.userImage);
-        
       }
-    }
-    reader.readAsDataURL(file)
-  };
+    };
+    reader.readAsDataURL(file);
+  }
 
   render() {
     return (
@@ -161,7 +176,7 @@ export default class PlacesToVisit extends VueComponent {
           v-model={this.dialog}
           max-width="700px"
           scrollable={true}
-        //TODO: Add details to dialog form
+        // TODO: Add details to dialog form
         >
           <VCard>
             <VCardTitle>
@@ -225,36 +240,30 @@ export default class PlacesToVisit extends VueComponent {
           </VCard>
         </VDialog>
       </div>
-    )
-  };
+    );
+  }
 
   private renderCardsNode(): Array<VNode> | VNode | undefined {
-
     if (this.$route.query.time === 'now' && this.placesNow.length) {
       return (
       <VRow>
-        { this.placesNow.map((it) => {
-        return this.renderCardNode(it);
-        }) }
+        { this.placesNow.map((it) => this.renderCardNode(it)) }
       </VRow>
-      )
-
-    } else if (this.$route.query.time === 'later' && this.placesLater.length) {
+      );
+    } if (this.$route.query.time === 'later' && this.placesLater.length) {
       return (
         <VRow>
-          { this.placesLater.map((it) => {
-          return this.renderCardNode(it);
-          }) }
+          { this.placesLater.map((it) => this.renderCardNode(it)) }
         </VRow>
-        )
+      );
     }
 
     return (
       <VCard flat>
         <VCardText>Добавьте свою первую карточку места</VCardText>
       </VCard>
-    )
-  };
+    );
+  }
 
   private renderCardNode(it: Place): VNode {
     return (
@@ -274,42 +283,38 @@ export default class PlacesToVisit extends VueComponent {
             <VBtn
               color="deep-purple lighten-2"
               text
-              onClick={() => { this.editCard(it) }}
+              onClick={() => { this.editCard(it); }}
             >
               Edit
             </VBtn>
             <VBtn
               color="pink lighten-2"
               text
-              onClick={() => { this.deleteCard(it) }}
+              onClick={() => { this.deleteCard(it); }}
             >
               Delete
             </VBtn>
           </VCardActions>
         </VCard>
       </VCol>
-    )
-  };
+    );
+  }
 
   private editCard(card: Place): void {
     this.newPlace = { ...card };
     this.dialog = true;
 
     this.mode = 'edit';
-  };
+  }
 
   private deleteCard(card: Place): void {
     this.mode = 'delete';
-    
+
     if (this.$route.query.time === 'now') {
-      this.placesNow = this.placesNow.filter(el => 
-        el.id !== card.id
-      )
+      this.placesNow = this.placesNow.filter((el) => el.id !== card.id);
     } else if (this.$route.query.time === 'later') {
-      this.placesLater = this.placesLater.filter(el => 
-        el.id !== card.id
-      )
+      this.placesLater = this.placesLater.filter((el) => el.id !== card.id);
     }
     this.save();
-  };
+  }
 }

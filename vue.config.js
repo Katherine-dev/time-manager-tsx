@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/test/',
+  publicPath: process.env.PUBLIC_PATH || '',
   transpileDependencies: [
     'vuetify',
   ],

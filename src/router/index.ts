@@ -1,46 +1,46 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../components/HomePage/Home'
-import WorkPage from '../components/WorkPage/WorkPage'
-import StudyPage from '../components/StudyPage/StudyPage'
-import PlacesToVisit from '@/components/PlacesToVisit/PlacesToVisit'
-import RecipesPage from '@/components/RecipesPage/RecipesPage'
+import Vue from 'vue';
+import VueRouter, { RouteConfig } from 'vue-router';
+import PlacesToVisit from '@/components/PlacesToVisit/PlacesToVisit';
+import RecipesPage from '@/components/RecipesPage/RecipesPage';
+import Home from '../components/HomePage/Home';
+import WorkPage from '../components/WorkPage/WorkPage';
+import StudyPage from '../components/StudyPage/StudyPage';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
   },
   {
     path: '/work',
     name: 'WorkPage',
-    component: WorkPage
+    component: WorkPage,
   },
   {
     path: '/study',
     name: 'StudyPage',
-    component: StudyPage
+    component: StudyPage,
   },
   {
     path: '/places',
     name: 'PlacesToVisit',
-    component: PlacesToVisit
+    component: PlacesToVisit,
   },
   {
     path: '/recipes',
     name: 'RecipesPage',
-    component: RecipesPage
+    component: RecipesPage,
   },
 
-]
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
