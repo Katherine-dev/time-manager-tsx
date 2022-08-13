@@ -2,6 +2,9 @@ name: Deploy on github pages
 on:
   push:
     branches: refactor
+
+env:
+  BASE_URL: /time-manager-tsx/
 jobs:
   deploy:
     runs-on: ubuntu-latest
