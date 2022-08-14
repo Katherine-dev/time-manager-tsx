@@ -5,6 +5,7 @@ on:
 
 env:
   BASE_URL: /time-manager-tsx/
+  NODE_ENV: production
 jobs:
   deploy:
     runs-on: ubuntu-latest
