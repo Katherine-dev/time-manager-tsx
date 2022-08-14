@@ -10,7 +10,11 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: process.env.BASE_URL || '',
+    path: '/',
+    redirect: { name: 'Home' },
+  },
+  {
+    path: process.env.BASE_URL,
     name: 'Home',
     component: Home,
   },
